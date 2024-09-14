@@ -12,6 +12,7 @@ const initalState = {
   status: "loading",
   index: 0,
   answer: null,
+  score: 0,
 };
 
 function reducer(state, action) {
@@ -23,7 +24,16 @@ function reducer(state, action) {
     case "start":
       return { ...state, status: "active" };
     case "newAnswer":
-      return { ...state, answer: action.payload };
+      const curQst = state.questions.at(state.index);
+
+      return {
+        ...state,
+        answer: action.payload,
+        score:
+          action.payload === curQst.correctOption
+            ? state.score + curQst.points
+            : state.score,
+      };
     default:
       throw new Error("Invalid action type");
   }
