@@ -45,9 +45,13 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { questions, status, index, answer } = state;
+  const { questions, status, index, answer, score } = state;
 
   const numQuestions = questions.length;
+  const maxPosPoints = questions.reduce(
+    (totalPpoints, curQuestion) => (totalPpoints += curQuestion.points),
+    0
+  );
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -74,7 +78,12 @@ export default function App() {
         )}
         {status === "active" && (
           <>
-            <Progress index={index} numQuestions={numQuestions} />
+            <Progress
+              index={index}
+              numQuestions={numQuestions}
+              score={score}
+              maxPosPoints={maxPosPoints}
+            />
             <Question
               question={questions[index]}
               dispatch={dispatch}
