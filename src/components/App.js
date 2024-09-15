@@ -16,6 +16,7 @@ const initalState = {
   index: 0,
   answer: null,
   score: 0,
+  bestscore: 0,
 };
 
 function reducer(state, action) {
@@ -40,7 +41,12 @@ function reducer(state, action) {
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
     case "finished":
-      return { ...state, status: "finished" };
+      return {
+        ...state,
+        status: "finished",
+        bestscore:
+          state.score > state.bestscore ? state.score : state.bestscore,
+      };
     default:
       throw new Error("Invalid action type");
   }
@@ -48,7 +54,7 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { questions, status, index, answer, score } = state;
+  const { questions, status, index, answer, score, bestscore } = state;
 
   const numQuestions = questions.length;
   const maxPosPoints = questions.reduce(
@@ -96,7 +102,11 @@ export default function App() {
           </>
         )}
         {status === "finished" && (
-          <FinishScreen score={score} maxPosPoints={maxPosPoints} />
+          <FinishScreen
+            score={score}
+            maxPosPoints={maxPosPoints}
+            bestscore={bestscore}
+          />
         )}
       </Main>
     </div>

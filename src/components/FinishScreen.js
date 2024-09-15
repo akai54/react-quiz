@@ -1,4 +1,4 @@
-function FinishScreen({ score, maxPosPoints }) {
+function FinishScreen({ score, maxPosPoints, bestscore }) {
   const correctPercentage = (score / maxPosPoints) * 100;
 
   const getEmoji = (percentage) => {
@@ -16,7 +16,7 @@ function FinishScreen({ score, maxPosPoints }) {
         {emoji} Your score is <strong>{score}</strong> out of {maxPosPoints} (
         {Math.ceil(correctPercentage)}%)
       </p>
-      <p className="highscore">(Best score: X)</p>
+      <p className="highscore">(Best score: {bestscore})</p>
     </div>
   );
 }
