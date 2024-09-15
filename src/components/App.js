@@ -81,8 +81,8 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
   const { questions, status, index, answer, score, bestscore, timer } = state;
 
-  const numQuestions = questions.length;
-  const maxPosPoints = questions.reduce(
+  const numQuestions = questions?.length;
+  const maxPosPoints = questions?.reduce(
     (totalPpoints, curQuestion) => (totalPpoints += curQuestion.points),
     0
   );
@@ -90,10 +90,12 @@ export default function App() {
   useEffect(() => {
     async function fetchQuestions() {
       try {
-        const res = await fetch("http://localhost:4000/questions");
+        const res = await fetch(
+          `https://akai54.github.io/react-quiz/data/questions.json`
+        );
         const data = await res.json();
 
-        dispatch({ type: "dataReceived", payload: data });
+        dispatch({ type: "dataReceived", payload: data.questions });
       } catch (error) {
         dispatch({ type: "dataFailed" });
       }
