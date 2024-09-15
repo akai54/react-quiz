@@ -8,6 +8,10 @@ import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
+import Footer from "./Footer";
+import Timer from "./Timer";
+
+const SECS_PER_QST = 30;
 
 const initalState = {
   questions: [],
@@ -17,16 +21,29 @@ const initalState = {
   answer: null,
   score: 0,
   bestscore: 0,
+  timer: undefined,
 };
 
 function reducer(state, action) {
   switch (action.type) {
+    case "ready":
+      return {
+        ...state,
+        status: "ready",
+        index: 0,
+        score: 0,
+        answer: null,
+      };
     case "dataReceived":
       return { ...state, questions: action.payload, status: "ready" };
     case "dataFailed":
       return { ...state, status: "error" };
     case "start":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        timer: state.questions.length * SECS_PER_QST,
+      };
     case "newAnswer":
       const curQst = state.questions.at(state.index);
 
@@ -47,6 +64,12 @@ function reducer(state, action) {
         bestscore:
           state.score > state.bestscore ? state.score : state.bestscore,
       };
+    case "tick":
+      return {
+        ...state,
+        timer: state.timer - 1,
+        status: state.timer === 1 ? "finished" : state.status,
+      };
     default:
       throw new Error("Invalid action type");
   }
@@ -54,7 +77,7 @@ function reducer(state, action) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { questions, status, index, answer, score, bestscore } = state;
+  const { questions, status, index, answer, score, bestscore, timer } = state;
 
   const numQuestions = questions.length;
   const maxPosPoints = questions.reduce(
@@ -98,7 +121,10 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton dispatch={dispatch} answer={answer} index={index} />
+            <Footer>
+              <Timer dispatch={dispatch} timer={timer} />
+              <NextButton dispatch={dispatch} answer={answer} index={index} />
+            </Footer>
           </>
         )}
         {status === "finished" && (
@@ -106,6 +132,7 @@ export default function App() {
             score={score}
             maxPosPoints={maxPosPoints}
             bestscore={bestscore}
+            dispatch={dispatch}
           />
         )}
       </Main>

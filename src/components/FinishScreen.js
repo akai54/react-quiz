@@ -1,4 +1,4 @@
-function FinishScreen({ score, maxPosPoints, bestscore }) {
+function FinishScreen({ score, maxPosPoints, bestscore, dispatch }) {
   const correctPercentage = (score / maxPosPoints) * 100;
 
   const getEmoji = (percentage) => {
@@ -17,6 +17,13 @@ function FinishScreen({ score, maxPosPoints, bestscore }) {
         {Math.ceil(correctPercentage)}%)
       </p>
       <p className="highscore">(Best score: {bestscore})</p>
+
+      <button
+        className="btn btn-ui"
+        onClick={() => dispatch({ type: "ready" })}
+      >
+        Restart
+      </button>
     </div>
   );
 }
