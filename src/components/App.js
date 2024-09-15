@@ -20,7 +20,7 @@ const initalState = {
   index: 0,
   answer: null,
   score: 0,
-  bestscore: 0,
+  bestscore: localStorage.getItem("bestscore") || 0,
   timer: undefined,
 };
 
@@ -58,11 +58,13 @@ function reducer(state, action) {
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
     case "finished":
+      const newBestScore =
+        state.score > state.bestscore ? state.score : state.bestscore;
+      localStorage.setItem("bestscore", newBestScore);
       return {
         ...state,
         status: "finished",
-        bestscore:
-          state.score > state.bestscore ? state.score : state.bestscore,
+        bestscore: newBestScore,
       };
     case "tick":
       return {
