@@ -1,12 +1,14 @@
-function NextButton({ dispatch, answer }) {
+function NextButton({ dispatch, answer, index }) {
   if (answer === null) return null;
+
+  const showRes = index === 14;
 
   return (
     <button
       className="btn btn-ui"
-      onClick={() => dispatch({ type: "nextQuestion" })}
+      onClick={() => dispatch({ type: showRes ? "finished" : "nextQuestion" })}
     >
-      Next
+      {showRes ? "Show Results" : "Next"}
     </button>
   );
 }

@@ -7,6 +7,7 @@ import StartScreen from "./StartScreen";
 import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
+import FinishScreen from "./FinishScreen";
 
 const initalState = {
   questions: [],
@@ -38,6 +39,8 @@ function reducer(state, action) {
       };
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
+    case "finished":
+      return { ...state, status: "finished" };
     default:
       throw new Error("Invalid action type");
   }
@@ -89,8 +92,11 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton dispatch={dispatch} answer={answer} />
+            <NextButton dispatch={dispatch} answer={answer} index={index} />
           </>
+        )}
+        {status === "finished" && (
+          <FinishScreen score={score} maxPosPoints={maxPosPoints} />
         )}
       </Main>
     </div>
